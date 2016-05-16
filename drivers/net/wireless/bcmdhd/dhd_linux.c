@@ -4076,13 +4076,14 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 	 * This is indeed a hack but we have to make it work properly before we have a better
 	 * solution
 	 */
-	dhd_update_fw_nv_path(dhd);
 
 	/* Link to info module */
 	dhd->pub.info = dhd;
 	/* Link to bus module */
 	dhd->pub.bus = bus;
 	dhd->pub.hdrlen = bus_hdrlen;
+
+	dhd_update_fw_nv_path(dhd);
 
 	/* Set network interface name if it was provided as module parameter */
 	if (iface_name[0]) {
@@ -4319,13 +4320,38 @@ int dhd_get_fw_mode(dhd_info_t *dhdinfo)
 	return DHD_FLAG_STA_MODE;
 }
 
+#define BCM4330_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcm4330_bg.bin"
+#define BCM4330_AP_MODE_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcm4330_apsta_bg.bin"
+#define BCM4330_NVRAM_NAME	"/lib/firmware/brcm/brcmfmac4330-sdio.txt"
+#define BCM4339_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcmdhd.bin"
+#define BCM4339_AP_MODE_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcmdhd_apsta.bin"
+#define BCM4339_NVRAM_NAME	"/lib/firmware/brcm/bcmdhd.cal"
+
+struct dhd_firmware_names {
+	uint chipid;
+	const char *bin;
+	const char *ap_bin;
+	const char *nv;
+};
+
+#define DHD_FIRMWARE_NVRAM(name) \
+	name ## _FIRMWARE_NAME, name ## _AP_MODE_FIRMWARE_NAME, name ## _NVRAM_NAME
+
+
+static const struct dhd_firmware_names dhd_fwname_data[] = {
+{ BCM4330_CHIP_ID, DHD_FIRMWARE_NVRAM(BCM4330) },
+{ BCM4339_CHIP_ID, DHD_FIRMWARE_NVRAM(BCM4339) }
+};
+
 bool dhd_update_fw_nv_path(dhd_info_t *dhdinfo)
 {
 	int fw_len;
 	int nv_len;
+	int i;
 	const char *fw = NULL;
 	const char *nv = NULL;
 	wifi_adapter_info_t *adapter = dhdinfo->adapter;
+	dhd_pub_t *dhdp = &dhdinfo->pub;
 
 
 	/* Update firmware and nvram path. The path may be from adapter info or module parameter
@@ -4348,6 +4374,20 @@ bool dhd_update_fw_nv_path(dhd_info_t *dhdinfo)
 #endif /* CONFIG_BCMDHD_NVRAM_PATH */
 	}
 
+	/* set firmware path by chip id */
+	for (i = 0; i < ARRAY_SIZE(dhd_fwname_data); i++) {
+		if (dhd_fwname_data[i].chipid == dhd_bus_chip_id(dhdp)) {
+			if (op_mode == DHD_FLAG_HOSTAP_MODE)
+				fw = dhd_fwname_data[i].ap_bin;
+			else
+				fw = dhd_fwname_data[i].bin;
+
+			nv = dhd_fwname_data[i].nv;
+			break;
+		}
+	}
+
+
 	/* check if we need to initialize the path */
 	if (adapter && adapter->fw_path && adapter->fw_path[0] != '\0')
 		fw = adapter->fw_path;
@@ -4363,6 +4403,9 @@ bool dhd_update_fw_nv_path(dhd_info_t *dhdinfo)
 		fw = firmware_path;
 	if (nvram_path[0] != '\0')
 		nv = nvram_path;
+
+	DHD_ERROR(("fw path is %s \r\n", fw));
+	DHD_ERROR(("nvram_path is %s \r\n", nv));
 
 	if (fw && fw[0] != '\0') {
 		fw_len = strlen(fw);
