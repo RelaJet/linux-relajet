@@ -4323,9 +4323,9 @@ int dhd_get_fw_mode(dhd_info_t *dhdinfo)
 #define BCM4330_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcm4330_bg.bin"
 #define BCM4330_AP_MODE_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcm4330_apsta_bg.bin"
 #define BCM4330_NVRAM_NAME	"/lib/firmware/brcm/brcmfmac4330-sdio.txt"
-#define BCM4339_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcmdhd.bin"
-#define BCM4339_AP_MODE_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcmdhd_apsta.bin"
-#define BCM4339_NVRAM_NAME	"/lib/firmware/brcm/bcmdhd.cal"
+#define BCM4339_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcm4339a0_ag.bin"
+#define BCM4339_AP_MODE_FIRMWARE_NAME	"/lib/firmware/brcm/fw_bcm4339a0_ag_apsta.bin"
+#define BCM4339_NVRAM_NAME	"/lib/firmware/brcm/nvram_ap6335.txt"
 
 struct dhd_firmware_names {
 	uint chipid;
