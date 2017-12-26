@@ -58,6 +58,7 @@ static u32 ddr_test_region = 0, test_region_size = SZ_2M;
 struct imx6_pcie {
 	struct pcie_port	pp;	/* pp.dbi_base is DT 0th resource */
 	u32 			ext_osc;
+	u32			osc_refclk_in;
 	int			dis_gpio;
 	int			power_on_gpio;
 	int			reset_gpio;
@@ -571,7 +572,8 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
 
 		/* pcie phy ref clock select; 1? internal pll : external osc */
 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-				BIT(5), 0);
+				BIT(5), imx6_pcie->osc_refclk_in ? 0 : BIT(5));
+
 	} else if (imx6_pcie->variant == IMX6SX) {
 		/* Force PCIe PHY reset */
 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR5,
@@ -1269,6 +1271,12 @@ static int imx6_pcie_probe(struct platform_device *pdev)
 
 	if (of_property_read_u32(node, "ext_osc", &imx6_pcie->ext_osc) < 0)
 		imx6_pcie->ext_osc = 0;
+
+	/* choose external or internal reference clock for imx7 */
+	if (of_property_read_u32(np, "osc-refclk-in", &imx6_pcie->osc_refclk_in) < 0)
+		imx6_pcie->osc_refclk_in = 0;
+
+	pr_info("osc_refclk_in = %d\n", imx6_pcie->osc_refclk_in);
 
 	if (imx6_pcie->ext_osc) {
 		imx6_pcie->pcie_ext = devm_clk_get(&pdev->dev, "pcie_ext");
