@@ -497,6 +497,10 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
 	imx6ul-14x14-evk-gpmi-weim.dtb \
 	imx6ul-14x14-evk-usb-certi.dtb \
 	imx6ul-geam-kit.dtb \
+	imx6ul-pico_dwarf.dtb \
+	imx6ul-pico_hobbit.dtb \
+	imx6ul-pico_nymph.dtb \
+	imx6ul-pico_pi.dtb \
 	imx6ul-tx6ul-0010.dtb \
 	imx6ul-tx6ul-0011.dtb \
 	imx6ul-tx6ul-mainboard.dtb \
