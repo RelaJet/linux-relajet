@@ -1,0 +1,129 @@
+if ARCH_VSNV3
+
+menu "AIT MMP System-on-Chip"
+
+choice
+	prompt "AIT MMP Processors"
+
+config ARCH_VSNV3AIT845X
+	bool "AIT845X"
+	select CPU_ARM926T
+	select GENERIC_CLOCKEVENTS
+	select HAVE_NET_MACB
+	select WIRELESS_EXT
+	select WEXT_PRIV
+
+endchoice
+
+choice
+    prompt "AIT CHIP Name"
+
+config AIT_CHIP_VSN_V3
+    bool "VSN_V3"
+
+config AIT_CHIP_MCR_V2
+    bool "MCR_V2"
+
+config AIT_CHIP_MCR_V2_MP
+    bool "MCR_V2_MP"
+
+endchoice
+
+# ----------------------------------------------------------
+
+if ARCH_VSNV3AIT845X
+
+comment "AIT845X Board Type"
+
+if AIT_CHIP_VSN_V3
+config MACH_VSNV3_AIT8455EVB
+	bool "AIT AIT8455EVB Evaluation Kit"
+	depends on ARCH_VSNV3
+	help
+	  Select this if you are using AIT's AIT8455 Evaluation Kit
+endif
+endif
+#-----------------------
+if AIT_CHIP_MCR_V2 || AIT_CHIP_MCR_V2_MP 
+
+choice
+	prompt "Select AIT8428 Board"
+
+config MACH_MCRV2_AIT8428EVB
+    bool "AIT8428EVB Evaluation Kit"
+
+config MACH_MCRV2_LOT8428EVB
+    bool "LOT8428EVB Evaluation Kit"
+
+endchoice
+	  
+endif #AIT_CHIP_MCR_V2
+#------------------------
+
+
+# ----------------------------------------------------------
+
+comment "VSNV3 Feature Selections"
+
+source "arch/arm/mach-vsnv3/cpucomm/Kconfig"
+
+config G0_CLOCK_HZ
+	int "Group 0 clock in KHz" if MMU
+	depends on AIT_CHIP_MCR_V2 || AIT_CHIP_MCR_V2_MP || AIT_CHIP_VSN_V3
+	default 2000000
+	help
+	  Please provide the group 0 clock setting to the system.
+
+config AIT_ENABLE_JTAG
+	bool "Enable JTAG"
+	help
+	  Select this if you need enable JTAG support.	
+
+# ----------------------------------------------------------
+
+comment "VSNV3 Feature Selections"
+
+config VSNV3_TIMER_HZ
+       int "Kernel HZ (jiffies per second)"
+       range 32 1024
+       depends on ARCH_VSNV3
+       default "100"
+       help
+	  On AT91rm9200 chips where you're using a system clock derived
+	  from the 32768 Hz hardware clock, this tick rate should divide
+	  it exactly: use a power-of-two value, such as 128 or 256, to
+	  reduce timing errors caused by rounding.
+
+	  On AT91sam926x chips, or otherwise when using a higher precision
+	  system clock (of at least several MHz), rounding is less of a
+	  problem so it can be safer to use a decimal values like 100.
+
+config AIT_VIDEO_RESERVED_SIZE
+    int "Reserved DRAM for AIT Camera driver"
+    range 6291456 25165824
+    depends on ARCH_VSNV3 && VIDEO_AIT_CAMERA
+    default "12582912"
+
+
+choice
+	prompt "Select a UART for early kernel messages"
+
+config AT91_EARLY_DBGU
+	bool "DBGU"
+
+config AIT_EARLY_USART0
+	bool "Select ttyS0"
+
+config AIT_EARLY_USART1
+	bool "Select ttyS1"
+
+config AIT_EARLY_USART2
+	bool "Select ttyS2"
+
+config AIT_EARLY_USART3
+	bool "Select ttyS3"
+endchoice
+
+endmenu
+
+endif # ARCH_VSNV3

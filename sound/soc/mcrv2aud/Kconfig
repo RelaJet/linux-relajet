@@ -1,0 +1,42 @@
+
+choice 
+	prompt "Soc Audio for MCRV2 built-in codec"
+
+config SND_MCRV2_SOC_I2S
+	tristate "Audio I2S support"
+
+if SND_MCRV2_SOC_I2S
+config SND_MCRV2_SOC_I2S_IF0
+	tristate "Audio I2S controller 0 Interface support"
+	depends on SND_MCRV2_SOC_I2S
+	default Y
+	help
+	  This selects the I2S controller 0.
+
+	  If unsure, say Y.
+
+config SND_MCRV2_SOC_I2S_IF1
+	tristate "Audio I2S controller 1 Interface support"
+	depends on SND_MCRV2_SOC_I2S
+	help
+	  This selects the MMC controller 1.
+
+	  If unsure, say Y.
+
+endif #SND_MCRV2_SOC_I2S
+
+config SND_MCRV2_SOC_ALSA
+        tristate "Standard ADC/DAC support"
+	depends on ARCH_MCRV2 || AIT_CHIP_MCR_V2
+	default y
+	help
+	  Say Y if you want to add support for SoC audio on AIT8428 evaluation board.
+
+config SND_MCRV2_SOC_ALSA_ALG_ENH
+        tristate "Audio Algorithm Enhanced"
+	depends on ARCH_MCRV2 || AIT_CHIP_MCR_V2 && CONFIG_AIT_MCRV2_DUAL_OS_ON_CPUA
+	default y
+	help
+	  Say Y if you want to add support for SoC audio on AIT8428 built-in codec.
+
+endchoice

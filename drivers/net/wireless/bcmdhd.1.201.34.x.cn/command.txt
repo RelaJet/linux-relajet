@@ -1,0 +1,26 @@
+mount /dev/mmcblk0 /mnt/sdcard/;cd /mnt/sdcard
+mkdir -p /tmp/etc/firmware/;cp /mnt/sdcard/AP6330_4.2/Wi-Fi/nvram_ap6330.txt /tmp/etc/firmware/nvram.txt
+
+echo /mnt/sdcard/AP6330_4.2/Wi-Fi/fw_bcm40183b2_ag.bin > /sys/module/bcmdhd/parameters/firmware_path
+
+#gpio low->hi
+#ifconfig wlan0 up;ifconfig p2p0 up
+
+
+/mnt/sdcard/AP6330_4.2/wpa_supplicant -iwlan0 -Dnl80211 -c/mnt/sdcard/wpa_supplicant.conf -N -ip2p0 -Dnl80211 -c/mnt/sdcard/p2p_supplicant.conf -e/mnt/sdcard/entropy.bin -puse_p2p_group_interface=1 &
+
+/mnt/sdcard/AP6330_4.2/wpa_cli -ip2p0 -p /var/run/wpa_supplicant/ 
+
+
+p2p_find
+p2p_connect [MAC] pbc
+  ==> GO ssid="DIRECT-Pj"
+
+
+
+
+/mnt/sdcard/AP6330_4.2/wpa_supplicant -iwlan0 -Dnl80211 -c/mnt/sdcard/wpa_supplicant.conf -N -ip2p0 -Dnl80211 -c/mnt/sdcard/p2p_supplicant.conf -e/mnt/sdcard/entropy.bin -puse_p2p_group_interface=1 -dd &
+wpa_cli -iwlan0 -p /var/run/wpa_supplicant/
+
+scan
+scan_result

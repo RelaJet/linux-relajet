@@ -1,0 +1,87 @@
+
+menu "Dual CPU Support"
+
+choice
+    prompt "DUAL CPU SETUP"
+
+config AIT_MCRV2_DUAL_OS_DISABLE
+	bool "Run on CPUA of AIT8428 (Uni-Mode)"
+	#default N
+	help
+	  This config chose CPUA of AIT8428(Mercury V2) to run Linux.
+
+config AIT_MCRV2_DUAL_OS_ON_CPUA
+	bool "Run on CPUA of AIT8428 (Master-Mode)"
+	#default Y
+	help
+	  This config chose CPUA of AIT8428(Mercury V2) to run Linux.
+	
+config AIT_MCRV2_DUAL_OS_ON_CPUB
+	bool "Run on CPUB of AIT8428 (Slave Mode)"
+	#default N
+	help
+	  This config chose CPUB of AIT8428(Mercury V2) to run Linux. 
+endchoice
+
+
+#if AIT_MCRV2_DUAL_OS_ON_CPUA
+
+
+config AIT_CPUB_BOOT_DRIVER
+	tristate "Boot CPUB by CPUA of AIT8428"
+	
+	depends on AIT_MCRV2_DUAL_OS_ON_CPUA 
+	default m
+	help
+	  This config chose CPUA of AIT8428(Mercury V2) to run Linux.
+
+config AIT_CPUB_BOOTCODE_PATH
+	depends on AIT_CPUB_BOOT_DRIVER
+	string "CPUB Boot code path"
+	default "/etc/firmware/ITCM_EXE_UCOS2"
+	---help---
+	  Path to the boot code for CPUB.
+
+config AIT_CPUB_FW_PATH
+	depends on AIT_CPUB_BOOT_DRIVER
+	string "CPUB firmware path"
+	default "/etc/firmware/ALL_DRAM_UCOS2"
+	---help---
+	  Path to the firmware for CPUB.
+
+config AIT_CPUB_CMD_THD
+	tristate "Enable kernel thread to process cpub command"
+	depends on AIT_CPUB_BOOT_DRIVER
+	help
+	  If you want cpub to read/write file. This configure must enable
+	  
+	comment "CPUB Driver Support"	  
+config AIT_CPUB_DRIVER_MD
+	tristate "Enable MD driver run on CPUA of AIT8428"
+	
+	depends on AIT_MCRV2_DUAL_OS_ON_CPUA && AIT_CPUB_BOOT_DRIVER
+	default m
+	help
+	  This config chose CPUA of AIT8428(Mercury V2) to run Linux.
+
+config AIT_CPUB_DRIVER_AAC
+	tristate "Enable AAC driver run on CPUA of AIT8428"
+	
+	depends on AIT_MCRV2_DUAL_OS_ON_CPUA && AIT_CPUB_BOOT_DRIVER
+	default m
+	help
+	  This config chose CPUA of AIT8428(Mercury V2) to run Linux.
+
+config AIT_CPUB_DRIVER_AES
+	tristate "Enable AES driver run on CPUA of AIT8428"
+	
+	depends on AIT_MCRV2_DUAL_OS_ON_CPUA && AIT_CPUB_BOOT_DRIVER
+	default m
+	help
+	  This config chose CPUA of AIT8428(Mercury V2) to run Linux.
+
+
+
+#endif # AIT_MCRV2_DUAL_OS_ON_CPUA
+
+endmenu

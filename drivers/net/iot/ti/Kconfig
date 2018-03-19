@@ -1,0 +1,12 @@
+#
+# ST device configuration
+#
+
+config CC3200
+	tristate "CC3200 support"
+	depends on ARM
+	select NET_CORE
+	select SPI
+	---help---
+	  Support for CC3200 chipset.
+

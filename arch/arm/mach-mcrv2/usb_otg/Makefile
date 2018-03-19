@@ -1,0 +1,1 @@
+obj-y += ex_usb.o mmpf_usbphy.o mmpf_usb_ctl.o 

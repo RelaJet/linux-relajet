@@ -1,0 +1,41 @@
+config SND_AIT_SOC
+        tristate "SoC Audio for the AIT8455 System-on-Chip"
+	depends on ARCH_VSNV3 
+	help
+	  Say Y or M if you want to add support for codecs attached to
+	  the ATMEL SSC interface. You will also need
+	  to select the audio interfaces to support below.
+
+config SND_AIT_SOC_SSC
+	tristate
+	depends on SND_AIT_SOC
+	default y
+	help
+	  Say Y or M if you want to add support for codecs the
+	  ATMEL SSC interface. You will also needs to select the individual
+	  machine drivers to support below.
+
+config SND_AIT8455_SOC_ALSA
+        tristate "SoC Audio support for AIT8455 evaluation board"
+	depends on ARCH_VSNV3
+	select SND_AIT_SOC_SSC
+	default y
+	help
+	  Say Y if you want to add support for SoC audio on AIT8455 evaluation board.
+
+config SND_VSNV3_SOC_AIT8455_WM8973
+          tristate "SoC Audio support for WM8731-based AIT8455 evaluation board"
+          depends on ARCH_VSNV3 && SND_AIT_SOC_SSC && SND_AIT_SOC
+          select SND_SOC_WM8973
+          default y
+          help
+            Say Y if you want to add support for SoC audio on WM8731-based
+            AIT8455 evaluation board.
+ 
+config SND_VSNV3_SOC_AIT8455_RT5627
+          tristate "SoC Audio support for RT5627-based AIT8455 evaluation board"
+          depends on ARCH_VSNV3 && SND_AIT_SOC_SSC && SND_AIT_SOC
+          select SND_SOC_RT5627
+          help
+            Say Y if you want to add support for SoC audio on RT5627-based
+            AIT8455 evaluation board.

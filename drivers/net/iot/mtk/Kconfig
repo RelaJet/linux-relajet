@@ -1,0 +1,35 @@
+#
+# MTK IoT device configuration
+#
+
+menuconfig IOT_MTK
+	tristate "MTK IoT Device support"
+
+if IOT_MTK
+comment "MTK IoT device drivers"
+config MT7687
+	tristate "MT7687 support"
+	depends on ARM
+	select NET_CORE
+	select SPI
+	---help---
+	  Support for MT7687 chipset.
+
+	  To compile this driver as a module, choose M here.  The module
+	  will be called mt7687.
+
+config MT7682
+	tristate "MT7682 support"
+	depends on ARM
+	select NET_CORE
+	select SPI
+	default y
+	---help---
+	  Support for MT7682 chipset.
+
+	  To compile this driver as a module, choose M here.  The module
+	  will be called mt7682.
+
+#endchoice
+endif
+

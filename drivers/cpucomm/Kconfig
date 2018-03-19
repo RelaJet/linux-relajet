@@ -1,0 +1,31 @@
+#
+# CPUCOMM subsystem configuration
+#
+
+menuconfig CPUCOMM
+	tristate "CPUCOMM support"
+	depends on HAS_IOMEM
+	---help---
+	  CPUCOMM support
+
+if CPUCOMM
+
+config CPUCOMM_DUMMY
+	boolean "dummy"
+	default y
+	help
+	  dummy
+
+endif # CPUCOMM
+
+config CPU_SHARE_MEM
+        tristate "CPUCOMM with share memory support"
+        depends on HAS_IOMEM 
+        ---help---
+	  Using share memory to do the commuication of two cpus.
+
+config CPU_SHARE_MEM_TEST
+	tristate "Test share memory"
+	depends on CPU_SHARE_MEM
+	---help---
+		Using Test Share memory

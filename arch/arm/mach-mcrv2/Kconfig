@@ -1,0 +1,125 @@
+if ARCH_MCRV2
+
+menu "AIT MMP System-on-Chip"
+
+
+
+choice
+    prompt "AIT CHIP Name"
+
+config MACH_MCRV2_6366
+    bool "AIT6366 SOC"
+    select CPU_ARM926T
+    select GENERIC_CLOCKEVENTS
+    select HAVE_NET_MACB
+    select WIRELESS_EXT
+    select WEXT_PRIV
+
+config MACH_MCRV2_8428
+    bool "AIT8428 SOC"
+    select CPU_ARM926T
+    select GENERIC_CLOCKEVENTS
+    select HAVE_NET_MACB
+    select WIRELESS_EXT
+    select WEXT_PRIV
+
+endchoice
+
+# ----------------------------------------------------------
+
+choice
+	prompt "Select board"
+
+config MCRV2_AIT6366G_EVB
+    bool "AIT6366G Ext. DDR3 EVB "
+    help
+	Select this if you are using AIT's AIT6366G w/ ext. DDR3 Evaluation Kit
+
+config MCRV2_AIT8428G_HDK
+    bool "AIT8428G Ext. DDR3 HDK "
+    help
+	Select this if you are using AIT's AIT8428G w/ ext. DDR3 Evaluation Kit
+
+config MCRV2_AIT8428EVB
+    bool "AIT8428EVB Evaluation Kit"
+
+	  
+config MCRV2_LOT8428EVB
+    bool "LOT8428EVB Evaluation Kit"
+
+endchoice
+	  
+
+#------------------------
+
+
+# ----------------------------------------------------------
+
+comment "MCRV2 Feature Selections"
+
+source "arch/arm/mach-mcrv2/cpucomm/Kconfig"
+
+
+config AIT_ENABLE_JTAG
+	bool "Enable JTAG"
+	help
+	  Select this if you need enable JTAG support.	
+
+config AIT_FAST_BOOT
+	bool "Enable Fast Boot"
+	help
+	  Select this if you need enable fast boot.		  
+
+config AIT_CONSOLE_QUIET
+	bool "Minimize Console Message"
+	help
+	  Select this if you need fast boot.		  
+
+# ----------------------------------------------------------
+
+comment "MCRV2 Feature Selections"
+
+config AIT_TIMER_HZ
+       int "Kernel HZ (jiffies per second)"
+       range 32 1024
+      # depends on ARCH_VSNV3
+       default "100"
+       help
+	  On AT91rm9200 chips where you're using a system clock derived
+	  from the 32768 Hz hardware clock, this tick rate should divide
+	  it exactly: use a power-of-two value, such as 128 or 256, to
+	  reduce timing errors caused by rounding.
+
+	  On AT91sam926x chips, or otherwise when using a higher precision
+	  system clock (of at least several MHz), rounding is less of a
+	  problem so it can be safer to use a decimal values like 100.
+	  
+config AIT_VIDEO_RESERVED_MBYTE
+    int "Reserved DRAM for AIT Camera driver. (unit: Mega Byte)"
+    range 6 72
+    default "12"
+    help
+	Set reserved DRAM for AIT camera driver (unit: Mega Byte)
+
+choice
+	prompt "Select a UART for early kernel messages"
+
+config AT91_EARLY_DBGU
+	bool "DBGU"
+
+config AIT_EARLY_USART0
+	bool "Select ttyS0"
+
+config AIT_EARLY_USART1
+	bool "Select ttyS1"
+
+config AIT_EARLY_USART2
+	bool "Select ttyS2"
+
+config AIT_EARLY_USART3
+	bool "Select ttyS3"
+endchoice
+
+endmenu
+
+endif # ARCH_MCRV2

@@ -1,0 +1,21 @@
+MODULE_NAME = ax88796c-spi
+
+#KDIR		:= /home/asix/work/ut6410/ut6410-kernel-2.6.29-v2.0
+#KDIR		:= /home/asix/work/2440/2.6.35/linux-2.6.35.1
+KDIR		:=/home/vin/customer/linux/linux-3.2.7_8428
+
+SRC		:= ax88796c_main.c ax88796c_ioctl.c ax88796c_spi.c
+
+$(MODULE_NAME)-objs = $(SRC:.c=.o)
+
+obj-m		:= $(MODULE_NAME).o
+PWD		:= $(shell pwd)
+
+all:
+	$(MAKE) -C $(KDIR) M=$(PWD) modules
+
+clean:
+	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) clean
+
+.PHONY: modules clean
+

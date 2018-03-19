@@ -1,0 +1,30 @@
+#
+# Ethernet LAN device configuration
+#
+
+menuconfig IOT
+	bool "IOT driver support"
+	depends on NET
+	default y
+	---help---
+	  This section contains all the Ethernet device drivers.
+
+if IOT
+
+
+
+
+source "drivers/net/iot/mtk/Kconfig"
+
+source "drivers/net/iot/ti/Kconfig"
+
+
+config SUPPORT_2WAY_SPI
+	tristate "2 Way SPI support"
+	depends on IOT && MT7687
+
+	---help---
+	  Support for 2 Way SPI to TX & RX Ethernet packet from IoT
+
+
+endif # IOT
