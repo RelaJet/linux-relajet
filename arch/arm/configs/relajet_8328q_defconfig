@@ -38,7 +38,7 @@ CONFIG_LEDS_CPU=y
 CONFIG_USE_OF=y
 CONFIG_ZBOOT_ROM_TEXT=0x0
 CONFIG_ZBOOT_ROM_BSS=0x0
-CONFIG_CMDLINE="quiet lpj=1314816 mem=240M console=ttyS0,115200 rootfstype=squashfs init=/init root=1f02 mtdparts=spi0.0:1M(boot),4M(kernel),4M(rootfs0),1M(jffs2),4M(rootfs1),1M(embedded),128K(nvram),64K(OEM),64K(Factory),768K(config),7M(iva);"
+CONFIG_CMDLINE="quiet lpj=1314816 mem=128M console=ttyS0,115200 rootfstype=squashfs init=/init root=1f02 mtdparts=spi0.0:1M(boot),4M(kernel),4M(rootfs0),1M(jffs2),4M(rootfs1),1M(embedded),128K(nvram),64K(OEM),64K(Factory),768K(config),7M(iva);"
 CONFIG_KEXEC=y
 CONFIG_CRASH_DUMP=y
 CONFIG_FPE_NWFPE=y
