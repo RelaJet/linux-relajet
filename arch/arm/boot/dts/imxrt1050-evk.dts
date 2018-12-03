@@ -39,6 +39,7 @@
 		gpio3 = &gpio4;
 		gpio4 = &gpio5;
 		serial0 = &uart0;
+		serial2 = &uart2;
 		esdhc0 = &esdhc0;
 	};
 
@@ -234,6 +235,18 @@
 				status = "disabled";
 			};
 
+			uart2: serial@4018c000 {
+				compatible = "fsl,imxrt1050-lpuart";
+				reg = <0x4018c000 0x1000>;
+				interrupts = <22>;
+				clocks = <&uart_clk>;
+				clock-names = "ipg";
+				dmas = <&edma 0 4>,
+					<&edma 0 5>;
+				dma-names = "rx","tx";
+				status = "disabled";
+			};
+
 			fec: ethernet@402d8000 {
 				compatible = "fsl,imxrt105x-fec";
 				reg = <0x402d8000 0x1000>;
@@ -372,6 +385,12 @@
 	status = "okay";
 };
 
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
+	status = "okay";
+};
+
 &fec {
 	phy-mode = "rmii";
 	phy-handle = <&ethphy0>;
@@ -411,6 +430,14 @@
 			MXRT105X_PAD_AD_B0_13_LPUART1_RX	MXRT105X_PAD_CFG_UART
 		>;
 	};
+
+	pinctrl_uart2: uart2grp {
+		fsl,pins = <
+			MXRT105X_PAD_AD_B1_06_LPUART3_TX	MXRT105X_PAD_CFG_UART
+			MXRT105X_PAD_AD_B1_07_LPUART3_RX	MXRT105X_PAD_CFG_UART
+		>;
+	};
+
 	pinctrl_gpio: gpiogrp {
 		fsl,pins = <
 			MXRT105X_PAD_AD_B0_01_GPIO1_IO01	MXRT105X_PAD_CFG_GPIO
