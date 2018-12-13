@@ -357,6 +357,7 @@ CONFIG_AUTO_ZRELADDR=y
 #
 # At least one emulation must be selected
 #
+CONFIG_VFPM=y
 
 #
 # Userspace binary formats
