@@ -43,6 +43,16 @@
 		esdhc0 = &esdhc0;
 	};
 
+	gpio-edm {
+		compatible = "gpio-edm";
+		arduino_led_en {
+		label = "ARDUINO_LED_EN";
+		gpios = <&gpio1 3 0>;
+		dir   = "out";
+		};
+	};
+
+
 	core_clk: core_clk {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -427,6 +437,7 @@
 	pinctrl_uart0: uart0grp {
 		fsl,pins = <
 			MXRT105X_PAD_AD_B0_12_LPUART1_TX	MXRT105X_PAD_CFG_UART
+			MXRT105X_PAD_AD_B0_03_GPIO1_IO03	MXRT105X_PAD_CFG_GPIO
 			MXRT105X_PAD_AD_B0_13_LPUART1_RX	MXRT105X_PAD_CFG_UART
 		>;
 	};
