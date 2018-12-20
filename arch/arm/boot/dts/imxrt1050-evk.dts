@@ -125,6 +125,12 @@
 		clock-frequency = <480000000>;
 	};
 
+	flexspi_clk: flexspi_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <133000000>;
+	};
+
 	soc {
 		aips0: aips-bus@40000000 {
 			compatible = "fsl,aips-bus", "simple-bus";
@@ -361,6 +367,20 @@
 				clock-names = "ipg";
 				status = "disabled";
 			};
+
+			flexspi0: flexspi@0402a8000 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				compatible = "fsl,imxrt1050-flexspi";
+				reg = <0x402a8000 0x4000>,
+					<0x60000000 0x20000000>;
+				reg-names = "FlexSPI", "FlexSPI-memory";
+
+				clocks = <&flexspi_clk>;
+				clock-names = "fspi";
+				interrupts = <108>;
+				status = "disabled";
+			};
 		};
 	};
 
@@ -466,3 +486,36 @@
 		>;
 	};
 };
+
+&flexspi0 {
+	status = "okay";
+
+	flash0: is25wp064a@0 {
+		reg = <0>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "issi,is25wp064a";
+		spi-max-frequency = <133000000>;
+
+		partition@0 {
+			label = "uboot";
+			reg = <0x0 0x50000>; };
+
+		partition@1 {
+			label = "uboot_env";
+			reg = <0x50000 0x20000>; };
+
+		partition@2 {
+			label = "dtb";
+			reg = <0x70000 0x10000>; };
+
+		partition@3 {
+			label = "kernel";
+			reg = <0x80000 0x400000>; };
+
+		partition@4 {
+			label = "rootfs";
+			reg = <0x480000 0x380000>; };
+	};
+};
+
