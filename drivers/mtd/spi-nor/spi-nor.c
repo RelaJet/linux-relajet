@@ -143,6 +143,9 @@ static inline int spi_nor_read_dummy_cycles(struct spi_nor *nor)
 	case SPI_NOR_FAST:
 	case SPI_NOR_DUAL:
 	case SPI_NOR_QUAD:
+	if (nor->read_opcode == SPINOR_OP_READ_1_4_4)
+		return 6;
+	else
 		return 8;
 	case SPI_NOR_NORMAL:
 		return 0;
@@ -739,6 +742,7 @@ static const struct flash_info spi_nor_ids[] = {
 
 	/* ISSI */
 	{ "is25cd512", INFO(0x7f9d20, 0, 32 * 1024,   2, SECT_4K) },
+	{ "is25wp064a", INFO(0x9d7017, 0, 64 * 1024, 128, SPI_NOR_QUAD_READ) },
 
 	/* Macronix */
 	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
@@ -1145,6 +1149,7 @@ static int set_quad_mode(struct spi_nor *nor, const struct flash_info *info)
 
 	switch (JEDEC_MFR(info)) {
 	case SNOR_MFR_MACRONIX:
+	case SNOR_MFR_ISSI:
 		status = macronix_quad_enable(nor);
 		if (status) {
 			dev_err(nor->dev, "Macronix quad-read not enabled\n");
@@ -1323,6 +1328,10 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
 	switch (nor->flash_read) {
 	case SPI_NOR_QUAD:
 		nor->read_opcode = SPINOR_OP_READ_1_1_4;
+		if (JEDEC_MFR(info) == SNOR_MFR_ISSI)
+			nor->read_opcode = SPINOR_OP_READ_1_4_4;
+		else
+			nor->read_opcode = SPINOR_OP_READ_1_1_4;
 		break;
 	case SPI_NOR_DUAL:
 		nor->read_opcode = SPINOR_OP_READ_1_1_2;
